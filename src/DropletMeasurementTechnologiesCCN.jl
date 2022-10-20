@@ -55,12 +55,20 @@ function is_valid(x)
     end
 end
 
+function testline(x)
+    try 
+        x[end]
+    catch
+        missing
+    end
+end
+
 function get_current_record()
     @chain deepcopy(DropletMeasurementTechnologiesCCN.dataBuffer[1:end]) begin
         String(_) 
         split(_, "\n") 
         filter(is_valid, _)
-        _[end]
+        testline(_)
     end
 end
 
