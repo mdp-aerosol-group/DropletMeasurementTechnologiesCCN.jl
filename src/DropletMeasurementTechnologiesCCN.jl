@@ -35,14 +35,14 @@ end
 function stream(port::Ptr{LibSerialPort.Lib.SPPort}, file::String)
     Godot = @task _ -> false
 
-    run(`touch $(file)`)
-
     function read(port, file)
         try
             nbytes_read, bytes = LibSerialPort.sp_nonblocking_read(port, 512)
             str = String(bytes[1:nbytes_read])
             filter(x -> x .== "\n", str)
-            open(file, "a") do io
+            
+            tc = Dates.format(now(), "yyyymmdd")            
+            open(file*"_"*tc*".txt", "a") do io
                 write(io, str)
             end
             append!(dataBuffer, bytes[1:nbytes_read])
