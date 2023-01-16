@@ -21,7 +21,7 @@ function config(portname::String)
     return port
 end
 
-function set_dT(dT)
+function set_dT(port, dT)
     setT = dT ≤ 3.0 ? 3.0 : dT
     setT = dT ≥ 19.0 ? 19.0 : setT
     if setT ≥ 10.0
@@ -29,7 +29,7 @@ function set_dT(dT)
     else
         cmd = @sprintf("%2.2f", setT) * "\r"
     end
-    LibSerialPort.sp_nonblocking_write(portDMT, cmd)
+    LibSerialPort.sp_nonblocking_write(port, cmd)
 end
 
 function stream(port::Ptr{LibSerialPort.Lib.SPPort}, file::String)
