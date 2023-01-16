@@ -4,6 +4,7 @@ using LibSerialPort
 using Dates
 using DataStructures
 using Chain
+using Printf
 
 const dataBuffer = CircularBuffer{UInt8}(5000)
 
@@ -18,6 +19,17 @@ function config(portname::String)
     LibSerialPort.sp_set_config_stopbits(config, 1)
 
     return port
+end
+
+function set_dT(dT)
+    setT = dT ≤ 3.0 ? 3.0 : dT
+    setT = dT ≥ 19.0 ? 19.0 : setT
+    if setT ≥ 10.0
+        cmd = @sprintf("%2.1f", setT) * "\r"
+    else
+        cmd = @sprintf("%2.2f", setT) * "\r"
+    end
+    LibSerialPort.sp_nonblocking_write(portDMT, cmd)
 end
 
 function stream(port::Ptr{LibSerialPort.Lib.SPPort}, file::String)
